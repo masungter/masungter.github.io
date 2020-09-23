@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Python Study" /><!-- tipuesearch -->
+	<link rel="stylesheet" href="/assets/tipuesearch/css/tipuesearch.css">
+	
+
+</head>
+<style>@import url(/public/css/syntax/monokai.css);</style>
+  <title>Python Study</title>
+  <!-- <link href="/public/css/bootstrap.min.css" rel="stylesheet"> -->
+
+  <link href="/public/css/style.css" rel="stylesheet">
+  <body>
+  	<div class="container"> 
+		<div class="sidebar">
+			<div class="sidebar-item sidebar-header">
+	<div class='sidebar-brand'>
+		<a href="/about/">Python Study</a>
+	</div>
+	<p class="lead">history of python</p></div>
+
+<div class="sidebar-item sidebar-nav">
+	<ul class="nav">
+      <li class="nav-title">Pages</li>
+	  <li>
+	  	<a class="nav-item" href="/">Articles</a>
+	  </li>
+	  
+	  
+	    
+	  
+	    
+	      
+	        <li>
+	        	<a class="nav-item" href="/about/">
+	            	About
+	            </a>
+	        </li>
+	      
+	    
+	  
+	    
+	      
+	    
+	  
+	    
+	  
+	    
+	      
+	        <li>
+	        	<a class="nav-item" href="/search/">
+	            	Search
+	            </a>
+	        </li>
+	      
+	    
+	  
+	    
+	  
+	    
+	  
+	</ul>
+</div>
+
+<div class="sidebar-item sidebar-nav">
+  	<ul class="nav">
+			<li class="nav-title">Categories</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#sample">
+				<span class="name">sample</span>
+				<span class="badge">2</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#jekyll">
+				<span class="name">jekyll</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#update">
+				<span class="name">update</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#python">
+				<span class="name">python</span>
+				<span class="badge">2</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#stock">
+				<span class="name">stock</span>
+				<span class="badge">4</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#real estate">
+				<span class="name">real estate</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	  </nav>
+	</ul>
+</div>
+
+<div class="sidebar-item sidebar-footer">
+	<form action="/search">
+    	<div class="tipue_search_left">
+			<img src="/assets/tipuesearch/search.png" class="tipue_search_icon">
+   		</div>
+   		<div class="tipue_search_right">
+			<input type="text" name="q" id="tipue_search_input" pattern=".{1,}" title="At least 1 characters" required></div>
+   		<div style="clear: both;"></div>
+ 	</form>
+</div>
+		</div>
+		<div class="content">
+			<article class="post">
+	<header class="post-header">
+		<div class="post-title"> 
+			stock using DART API
+		</div>
+		<time class="post-date dt-published" datetime="2020-09-21T19:20:23+09:00" itemprop="datePublished">2020/09/21
+		</time>		
+	</header>
+
+	<div class="post-content">
+		<h1 id="opendartreader-api를-이용한-dart조회">OpenDartReader API를 이용한 DART조회</h1>
+<h2 id="분기보고서-조회하여-매출-조회">분기보고서 조회하여 매출 조회</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">OpenDartReader</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s">'ignore'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">api_key</span> <span class="o">=</span> <span class="s">"##############"</span>
+<span class="n">dart</span> <span class="o">=</span> <span class="n">OpenDartReader</span><span class="p">(</span><span class="n">api_key</span><span class="p">)</span> 
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">company</span> <span class="o">=</span> <span class="s">'005380'</span> <span class="c1">#현대차 코드
+</span><span class="n">year</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2016</span><span class="p">,</span> <span class="mi">2021</span><span class="p">)</span>
+<span class="n">reprt_code</span> <span class="o">=</span> <span class="p">[</span><span class="s">'11013'</span><span class="p">,</span> <span class="s">'11012'</span><span class="p">,</span> <span class="s">'11014'</span><span class="p">,</span> <span class="s">'11011'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dart</span><span class="o">.</span><span class="n">finstate</span><span class="p">(</span><span class="n">company</span><span class="p">,</span> <span class="s">'2020'</span><span class="p">,</span> <span class="n">reprt_code</span> <span class="o">=</span> <span class="s">'11012'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>rcept_no</th>
+      <th>reprt_code</th>
+      <th>bsns_year</th>
+      <th>corp_code</th>
+      <th>stock_code</th>
+      <th>fs_div</th>
+      <th>fs_nm</th>
+      <th>sj_div</th>
+      <th>sj_nm</th>
+      <th>account_nm</th>
+      <th>thstrm_nm</th>
+      <th>thstrm_dt</th>
+      <th>thstrm_amount</th>
+      <th>frmtrm_nm</th>
+      <th>frmtrm_dt</th>
+      <th>frmtrm_amount</th>
+      <th>ord</th>
+      <th>thstrm_add_amount</th>
+      <th>frmtrm_add_amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>CFS</td>
+      <td>연결재무제표</td>
+      <td>BS</td>
+      <td>재무상태표</td>
+      <td>유동자산</td>
+      <td>제 53 기반기말</td>
+      <td>2020.06.30 현재</td>
+      <td>79,025,897,000,000</td>
+      <td>제 52 기말</td>
+      <td>2019.12.31 현재</td>
+      <td>76,082,873,000,000</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>CFS</td>
+      <td>연결재무제표</td>
+      <td>BS</td>
+      <td>재무상태표</td>
+      <td>비유동자산</td>
+      <td>제 53 기반기말</td>
+      <td>2020.06.30 현재</td>
+      <td>122,778,623,000,000</td>
+      <td>제 52 기말</td>
+      <td>2019.12.31 현재</td>
+      <td>118,429,347,000,000</td>
+      <td>3</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>CFS</td>
+      <td>연결재무제표</td>
+      <td>BS</td>
+      <td>재무상태표</td>
+      <td>자산총계</td>
+      <td>제 53 기반기말</td>
+      <td>2020.06.30 현재</td>
+      <td>201,804,520,000,000</td>
+      <td>제 52 기말</td>
+      <td>2019.12.31 현재</td>
+      <td>194,512,220,000,000</td>
+      <td>5</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>CFS</td>
+      <td>연결재무제표</td>
+      <td>BS</td>
+      <td>재무상태표</td>
+      <td>유동부채</td>
+      <td>제 53 기반기말</td>
+      <td>2020.06.30 현재</td>
+      <td>54,213,858,000,000</td>
+      <td>제 52 기말</td>
+      <td>2019.12.31 현재</td>
+      <td>53,314,096,000,000</td>
+      <td>7</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>CFS</td>
+      <td>연결재무제표</td>
+      <td>BS</td>
+      <td>재무상태표</td>
+      <td>비유동부채</td>
+      <td>제 53 기반기말</td>
+      <td>2020.06.30 현재</td>
+      <td>71,542,527,000,000</td>
+      <td>제 52 기말</td>
+      <td>2019.12.31 현재</td>
+      <td>64,832,370,000,000</td>
+      <td>9</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>CFS</td>
+      <td>연결재무제표</td>
+      <td>BS</td>
+      <td>재무상태표</td>
+      <td>부채총계</td>
+      <td>제 53 기반기말</td>
+      <td>2020.06.30 현재</td>
+      <td>125,756,385,000,000</td>
+      <td>제 52 기말</td>
+      <td>2019.12.31 현재</td>
+      <td>118,146,466,000,000</td>
+      <td>11</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>CFS</td>
+      <td>연결재무제표</td>
+      <td>BS</td>
+      <td>재무상태표</td>
+      <td>자본금</td>
+      <td>제 53 기반기말</td>
+      <td>2020.06.30 현재</td>
+      <td>1,488,993,000,000</td>
+      <td>제 52 기말</td>
+      <td>2019.12.31 현재</td>
+      <td>1,488,993,000,000</td>
+      <td>13</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>CFS</td>
+      <td>연결재무제표</td>
+      <td>BS</td>
+      <td>재무상태표</td>
+      <td>이익잉여금</td>
+      <td>제 53 기반기말</td>
+      <td>2020.06.30 현재</td>
+      <td>68,114,066,000,000</td>
+      <td>제 52 기말</td>
+      <td>2019.12.31 현재</td>
+      <td>68,249,633,000,000</td>
+      <td>17</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>CFS</td>
+      <td>연결재무제표</td>
+      <td>BS</td>
+      <td>재무상태표</td>
+      <td>자본총계</td>
+      <td>제 53 기반기말</td>
+      <td>2020.06.30 현재</td>
+      <td>76,048,135,000,000</td>
+      <td>제 52 기말</td>
+      <td>2019.12.31 현재</td>
+      <td>76,365,754,000,000</td>
+      <td>21</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>CFS</td>
+      <td>연결재무제표</td>
+      <td>IS</td>
+      <td>손익계산서</td>
+      <td>매출액</td>
+      <td>제 53 기반기</td>
+      <td>2020.01.01 ~ 2020.06.30</td>
+      <td>21,858,991,000,000</td>
+      <td>제 52 기반기</td>
+      <td>2019.01.01 ~ 2019.06.30</td>
+      <td>26,966,353,000,000</td>
+      <td>23</td>
+      <td>47,178,439,000,000</td>
+      <td>50,953,432,000,000</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>CFS</td>
+      <td>연결재무제표</td>
+      <td>IS</td>
+      <td>손익계산서</td>
+      <td>법인세차감전 순이익</td>
+      <td>제 53 기반기</td>
+      <td>2020.01.01 ~ 2020.06.30</td>
+      <td>596,266,000,000</td>
+      <td>제 52 기반기</td>
+      <td>2019.01.01 ~ 2019.06.30</td>
+      <td>1,385,986,000,000</td>
+      <td>27</td>
+      <td>1,320,534,000,000</td>
+      <td>2,602,787,000,000</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>OFS</td>
+      <td>재무제표</td>
+      <td>BS</td>
+      <td>재무상태표</td>
+      <td>유동자산</td>
+      <td>제 53 기반기말</td>
+      <td>2020.06.30 현재</td>
+      <td>21,464,025,000,000</td>
+      <td>제 52 기말</td>
+      <td>2019.12.31 현재</td>
+      <td>22,346,792,000,000</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>OFS</td>
+      <td>재무제표</td>
+      <td>BS</td>
+      <td>재무상태표</td>
+      <td>비유동자산</td>
+      <td>제 53 기반기말</td>
+      <td>2020.06.30 현재</td>
+      <td>53,002,258,000,000</td>
+      <td>제 52 기말</td>
+      <td>2019.12.31 현재</td>
+      <td>51,810,427,000,000</td>
+      <td>4</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>OFS</td>
+      <td>재무제표</td>
+      <td>BS</td>
+      <td>재무상태표</td>
+      <td>자산총계</td>
+      <td>제 53 기반기말</td>
+      <td>2020.06.30 현재</td>
+      <td>74,466,283,000,000</td>
+      <td>제 52 기말</td>
+      <td>2019.12.31 현재</td>
+      <td>74,157,219,000,000</td>
+      <td>6</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>OFS</td>
+      <td>재무제표</td>
+      <td>BS</td>
+      <td>재무상태표</td>
+      <td>유동부채</td>
+      <td>제 53 기반기말</td>
+      <td>2020.06.30 현재</td>
+      <td>14,648,064,000,000</td>
+      <td>제 52 기말</td>
+      <td>2019.12.31 현재</td>
+      <td>15,148,868,000,000</td>
+      <td>8</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>OFS</td>
+      <td>재무제표</td>
+      <td>BS</td>
+      <td>재무상태표</td>
+      <td>비유동부채</td>
+      <td>제 53 기반기말</td>
+      <td>2020.06.30 현재</td>
+      <td>6,046,491,000,000</td>
+      <td>제 52 기말</td>
+      <td>2019.12.31 현재</td>
+      <td>5,089,342,000,000</td>
+      <td>10</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>OFS</td>
+      <td>재무제표</td>
+      <td>BS</td>
+      <td>재무상태표</td>
+      <td>부채총계</td>
+      <td>제 53 기반기말</td>
+      <td>2020.06.30 현재</td>
+      <td>20,694,555,000,000</td>
+      <td>제 52 기말</td>
+      <td>2019.12.31 현재</td>
+      <td>20,238,210,000,000</td>
+      <td>12</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>OFS</td>
+      <td>재무제표</td>
+      <td>BS</td>
+      <td>재무상태표</td>
+      <td>자본금</td>
+      <td>제 53 기반기말</td>
+      <td>2020.06.30 현재</td>
+      <td>1,488,993,000,000</td>
+      <td>제 52 기말</td>
+      <td>2019.12.31 현재</td>
+      <td>1,488,993,000,000</td>
+      <td>15</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>OFS</td>
+      <td>재무제표</td>
+      <td>BS</td>
+      <td>재무상태표</td>
+      <td>이익잉여금</td>
+      <td>제 53 기반기말</td>
+      <td>2020.06.30 현재</td>
+      <td>50,171,398,000,000</td>
+      <td>제 52 기말</td>
+      <td>2019.12.31 현재</td>
+      <td>49,870,324,000,000</td>
+      <td>19</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>OFS</td>
+      <td>재무제표</td>
+      <td>BS</td>
+      <td>재무상태표</td>
+      <td>자본총계</td>
+      <td>제 53 기반기말</td>
+      <td>2020.06.30 현재</td>
+      <td>53,771,728,000,000</td>
+      <td>제 52 기말</td>
+      <td>2019.12.31 현재</td>
+      <td>53,919,009,000,000</td>
+      <td>22</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>OFS</td>
+      <td>재무제표</td>
+      <td>IS</td>
+      <td>손익계산서</td>
+      <td>매출액</td>
+      <td>제 53 기반기</td>
+      <td>2020.01.01 ~ 2020.06.30</td>
+      <td>12,131,110,000,000</td>
+      <td>제 52 기반기</td>
+      <td>2019.01.01 ~ 2019.06.30</td>
+      <td>12,952,915,000,000</td>
+      <td>24</td>
+      <td>23,406,075,000,000</td>
+      <td>24,229,847,000,000</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>OFS</td>
+      <td>재무제표</td>
+      <td>IS</td>
+      <td>손익계산서</td>
+      <td>영업이익</td>
+      <td>제 53 기반기</td>
+      <td>2020.01.01 ~ 2020.06.30</td>
+      <td>651,424,000,000</td>
+      <td>제 52 기반기</td>
+      <td>2019.01.01 ~ 2019.06.30</td>
+      <td>673,872,000,000</td>
+      <td>26</td>
+      <td>1,051,097,000,000</td>
+      <td>909,143,000,000</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>OFS</td>
+      <td>재무제표</td>
+      <td>IS</td>
+      <td>손익계산서</td>
+      <td>법인세차감전 순이익</td>
+      <td>제 53 기반기</td>
+      <td>2020.01.01 ~ 2020.06.30</td>
+      <td>646,633,000,000</td>
+      <td>제 52 기반기</td>
+      <td>2019.01.01 ~ 2019.06.30</td>
+      <td>1,253,852,000,000</td>
+      <td>28</td>
+      <td>1,351,910,000,000</td>
+      <td>2,156,586,000,000</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>20200814002203</td>
+      <td>11012</td>
+      <td>2020</td>
+      <td>00164742</td>
+      <td>005380</td>
+      <td>OFS</td>
+      <td>재무제표</td>
+      <td>IS</td>
+      <td>손익계산서</td>
+      <td>당기순이익</td>
+      <td>제 53 기반기</td>
+      <td>2020.01.01 ~ 2020.06.30</td>
+      <td>482,965,000,000</td>
+      <td>제 52 기반기</td>
+      <td>2019.01.01 ~ 2019.06.30</td>
+      <td>1,017,689,000,000</td>
+      <td>30</td>
+      <td>1,097,124,000,000</td>
+      <td>1,812,538,000,000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">finstate</span><span class="p">(</span><span class="n">company</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">reprt_code</span><span class="p">):</span>  
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">fs</span> <span class="o">=</span> <span class="n">dart</span><span class="o">.</span><span class="n">finstate</span><span class="p">(</span><span class="n">company</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">reprt_code</span> <span class="o">=</span> <span class="n">reprt_code</span><span class="p">)</span>
+        
+        <span class="n">fs_cfs</span> <span class="o">=</span> <span class="n">fs</span><span class="p">[</span><span class="n">fs</span><span class="p">[</span><span class="s">'fs_div'</span><span class="p">]</span><span class="o">.</span><span class="nb">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s">'CFS'</span><span class="p">)]</span>            
+        <span class="n">fs_revenue</span><span class="o">=</span> <span class="n">fs_cfs</span><span class="p">[</span><span class="n">fs_cfs</span><span class="p">[</span><span class="s">'account_nm'</span><span class="p">]</span><span class="o">.</span><span class="nb">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s">'매출액'</span><span class="p">)]</span>
+        <span class="n">TotalSales</span> <span class="o">=</span> <span class="n">fs_revenue</span><span class="p">[</span><span class="s">'thstrm_amount'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">','</span><span class="p">,</span> <span class="s">''</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">TotalSales</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">TotalSales</span><span class="p">)</span>
+        <span class="n">rcept_no</span> <span class="o">=</span> <span class="n">fs_revenue</span><span class="p">[</span><span class="s">'rcept_no'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">','</span><span class="p">,</span> <span class="s">''</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s">'rcept_no'</span><span class="p">:</span><span class="n">rcept_no</span><span class="p">,</span>
+                     <span class="s">'TotalSales'</span><span class="p">:</span><span class="n">TotalSales</span><span class="p">})</span>
+        
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="n">rows</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="n">rows</span> <span class="o">=</span><span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">year</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">reprt_code</span><span class="p">:</span>
+        <span class="n">finstate</span><span class="p">(</span><span class="n">company</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">,</span> <span class="n">temp</span><span class="p">])</span>
+        
+<span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="s">'rcept_no'</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s">'rcept_no'</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="mi">4</span><span class="p">):</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">4</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">4</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">4</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">4</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">4</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="n">df</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>rcept_no</th>
+      <th>TotalSales</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>20160516003065</td>
+      <td>22350624000000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>20160816001662</td>
+      <td>24676726000000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>20161114002002</td>
+      <td>22083670000000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>20170331004820</td>
+      <td>24538004000000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>20170515004197</td>
+      <td>23365959000000</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>20170814002062</td>
+      <td>24308002000000</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>20171114002108</td>
+      <td>24201273000000</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>20180402004162</td>
+      <td>24500845000000</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>20180515002108</td>
+      <td>22436561000000</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>20180814002199</td>
+      <td>24711802000000</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>20181114002234</td>
+      <td>24433735000000</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>20190401004132</td>
+      <td>25230511000000</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>20190515002011</td>
+      <td>23987079000000</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>20190814002230</td>
+      <td>26966353000000</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>20191114001732</td>
+      <td>26968853000000</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>20200330004041</td>
+      <td>27824137000000</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>20200515002179</td>
+      <td>25319448000000</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>20200814002203</td>
+      <td>21858991000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df2</span> <span class="o">=</span> <span class="n">df</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">'rcept_no'</span><span class="p">]):</span>
+    <span class="n">df2</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="n">m</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+    
+<span class="n">df2</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>rcept_no</th>
+      <th>TotalSales</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1605</td>
+      <td>22350624000000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1608</td>
+      <td>24676726000000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1611</td>
+      <td>22083670000000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1703</td>
+      <td>24538004000000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1705</td>
+      <td>23365959000000</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>1708</td>
+      <td>24308002000000</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>1711</td>
+      <td>24201273000000</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>1804</td>
+      <td>24500845000000</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>1805</td>
+      <td>22436561000000</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>1808</td>
+      <td>24711802000000</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>1811</td>
+      <td>24433735000000</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>1904</td>
+      <td>25230511000000</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>1905</td>
+      <td>23987079000000</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>1908</td>
+      <td>26966353000000</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>1911</td>
+      <td>26968853000000</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>2003</td>
+      <td>27824137000000</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>2005</td>
+      <td>25319448000000</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>2008</td>
+      <td>21858991000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">font_manager</span><span class="p">,</span> <span class="n">rc</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="n">mpl</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s">'font'</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="s">'Gulim'</span><span class="p">)</span> <span class="c1"># 한글폰트 선택
+</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">df2</span><span class="p">[</span><span class="s">'rcept_no'</span><span class="p">],</span> <span class="n">df2</span><span class="p">[</span><span class="s">'TotalSales'</span><span class="p">])</span>
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;BarContainer object of 18 artists&gt;
+</code></pre></div></div>
+
+<p><img src="/public/img/2020-09-21-dart_9_1.png" alt="png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div></div>
+
+	</div>
+</article>
+		</div>
+	</div>
+  </body>
+</html>

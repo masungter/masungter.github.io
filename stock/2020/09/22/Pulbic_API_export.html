@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Python Study" /><!-- tipuesearch -->
+	<link rel="stylesheet" href="/assets/tipuesearch/css/tipuesearch.css">
+	
+
+</head>
+<style>@import url(/public/css/syntax/monokai.css);</style>
+  <title>Python Study</title>
+  <!-- <link href="/public/css/bootstrap.min.css" rel="stylesheet"> -->
+
+  <link href="/public/css/style.css" rel="stylesheet">
+  <body>
+  	<div class="container"> 
+		<div class="sidebar">
+			<div class="sidebar-item sidebar-header">
+	<div class='sidebar-brand'>
+		<a href="/about/">Python Study</a>
+	</div>
+	<p class="lead">history of python</p></div>
+
+<div class="sidebar-item sidebar-nav">
+	<ul class="nav">
+      <li class="nav-title">Pages</li>
+	  <li>
+	  	<a class="nav-item" href="/">Articles</a>
+	  </li>
+	  
+	  
+	    
+	  
+	    
+	      
+	        <li>
+	        	<a class="nav-item" href="/about/">
+	            	About
+	            </a>
+	        </li>
+	      
+	    
+	  
+	    
+	      
+	    
+	  
+	    
+	  
+	    
+	      
+	        <li>
+	        	<a class="nav-item" href="/search/">
+	            	Search
+	            </a>
+	        </li>
+	      
+	    
+	  
+	    
+	  
+	    
+	  
+	</ul>
+</div>
+
+<div class="sidebar-item sidebar-nav">
+  	<ul class="nav">
+			<li class="nav-title">Categories</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#sample">
+				<span class="name">sample</span>
+				<span class="badge">2</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#jekyll">
+				<span class="name">jekyll</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#update">
+				<span class="name">update</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#python">
+				<span class="name">python</span>
+				<span class="badge">2</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#stock">
+				<span class="name">stock</span>
+				<span class="badge">4</span>
+	    	</a>
+ 		</li>
+	    
+	    <li>
+	    	<a class="nav-item" href="/category/#real estate">
+				<span class="name">real estate</span>
+				<span class="badge">1</span>
+	    	</a>
+ 		</li>
+	    
+	  </nav>
+	</ul>
+</div>
+
+<div class="sidebar-item sidebar-footer">
+	<form action="/search">
+    	<div class="tipue_search_left">
+			<img src="/assets/tipuesearch/search.png" class="tipue_search_icon">
+   		</div>
+   		<div class="tipue_search_right">
+			<input type="text" name="q" id="tipue_search_input" pattern=".{1,}" title="At least 1 characters" required></div>
+   		<div style="clear: both;"></div>
+ 	</form>
+</div>
+		</div>
+		<div class="content">
+			<article class="post">
+	<header class="post-header">
+		<div class="post-title"> 
+			stock using Public API
+		</div>
+		<time class="post-date dt-published" datetime="2020-09-22T19:20:23+09:00" itemprop="datePublished">2020/09/22
+		</time>		
+	</header>
+
+	<div class="post-content">
+		<h1 id="수출입-통계를-주가-분석">수출입 통계를 주가 분석</h1>
+<h2 id="dart-api-및-공공-api-활용">Dart API 및 공공 API 활용</h2>
+<h3 id="자동차-수출량을-이용한-현대차-주가-분석">자동차 수출량을 이용한 현대차 주가 분석</h3>
+
+<ul>
+  <li>현대차 매출 : DART API 활용</li>
+  <li>국내 자동차 수출량 : 공공 API 활용</li>
+  <li>주가 : FinanceDataReader 라이브러리 활용</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># -*- coding: utf-8 -*-
+</span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">font_manager</span><span class="p">,</span> <span class="n">rc</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+
+<span class="n">font_name</span> <span class="o">=</span> <span class="n">font_manager</span><span class="o">.</span><span class="n">FontProperties</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="s">"c:/Windows/Fonts/malgun.ttf"</span><span class="p">)</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span>
+<span class="n">rc</span><span class="p">(</span><span class="s">'font'</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="n">font_name</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>1) 공공 API 활용</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">company</span> <span class="o">=</span> <span class="s">'005380'</span> <span class="c1">#현대자동차
+</span>
+<span class="n">api_key</span><span class="o">=</span><span class="s">"###########"</span>
+<span class="n">searchBgnDe</span> <span class="o">=</span> <span class="s">'201901'</span>
+<span class="n">searchEndDe</span> <span class="o">=</span> <span class="s">'202001'</span>
+<span class="n">searchItemCd</span> <span class="o">=</span> <span class="s">'87032'</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">a</span><span class="p">(</span><span class="n">searchBgnDe</span><span class="p">,</span> <span class="n">searchEndDe</span><span class="p">,</span><span class="n">searchItemCd</span><span class="p">):</span>
+       
+    <span class="n">public_API_url</span> <span class="o">=</span> <span class="s">'http://openapi.customs.go.kr/openapi/service/newTradestatistics/'</span>
+    <span class="n">operation_url</span> <span class="o">=</span> <span class="s">'getitemtradeList'</span>
+    
+    <span class="n">url</span> <span class="o">=</span> <span class="n">public_API_url</span> <span class="o">+</span> <span class="n">operation_url</span> <span class="o">+</span> <span class="s">'?'</span> <span class="o">+</span> <span class="s">'serviceKey='</span> <span class="o">+</span> <span class="n">api_key</span> <span class="o">+</span> <span class="s">'&amp;searchBgnDe='</span> <span class="o">+</span> <span class="n">searchBgnDe</span> \
+    <span class="o">+</span><span class="s">'&amp;searchEndDe='</span> <span class="o">+</span> <span class="n">searchEndDe</span> <span class="o">+</span> <span class="s">'&amp;searchItemCd='</span> <span class="o">+</span> <span class="n">searchItemCd</span> <span class="o">+</span> <span class="s">'&amp;'</span>
+    
+    <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>    
+    <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="p">,</span><span class="s">'lxml-xml'</span><span class="p">)</span>
+    <span class="n">it</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s">'item'</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">it</span><span class="p">:</span>
+    
+        <span class="n">balPayments</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">'balPayments'</span><span class="p">)</span><span class="o">.</span><span class="n">text</span> <span class="c1"># 무역수지
+</span>        <span class="n">expDlr</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">'expDlr'</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>   <span class="c1">#수출금액
+</span>        <span class="n">hsCode</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">'hsCode'</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>   <span class="c1">#HS코드
+</span>        <span class="n">impDlr</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">'impDlr'</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>   <span class="c1">#수입금액
+</span>        <span class="n">statKor</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">'statKor'</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>   <span class="c1">#품목명
+</span>        <span class="n">year</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">'year'</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>   <span class="c1">#년도
+</span>
+        <span class="n">rows_1</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s">'year'</span><span class="p">:</span><span class="n">year</span><span class="p">,</span>
+                       <span class="s">'statKor'</span><span class="p">:</span><span class="n">statKor</span><span class="p">,</span>
+                       <span class="s">'hsCode'</span><span class="p">:</span><span class="n">hsCode</span><span class="p">,</span>
+                       <span class="s">'expDlr'</span><span class="p">:</span><span class="n">expDlr</span><span class="p">,</span>
+                       <span class="s">'impDlr'</span><span class="p">:</span><span class="n">impDlr</span><span class="p">,</span>
+                       <span class="s">'balPayments'</span><span class="p">:</span><span class="n">balPayments</span><span class="p">})</span>
+        
+    <span class="k">return</span> <span class="n">rows_1</span>
+</code></pre></div></div>
+
+<p>데이터는 1년단위만 조회되기때문에 for / zip문으로 나눠서 검색한다</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ragne_searchBgnDe</span> <span class="o">=</span> <span class="p">[</span><span class="s">'201501'</span><span class="p">,</span><span class="s">'201601'</span><span class="p">,</span><span class="s">'201701'</span><span class="p">,</span><span class="s">'201801'</span><span class="p">,</span> <span class="s">'201901'</span><span class="p">,</span><span class="s">'202001'</span><span class="p">]</span>
+<span class="n">range_searchEndDe</span> <span class="o">=</span> <span class="p">[</span><span class="s">'201601'</span><span class="p">,</span><span class="s">'201701'</span><span class="p">,</span><span class="s">'201801'</span><span class="p">,</span><span class="s">'201901'</span><span class="p">,</span> <span class="s">'202001'</span><span class="p">,</span><span class="s">'202009'</span><span class="p">]</span>
+
+<span class="n">rows_1</span> <span class="o">=</span><span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">searchBgnDe</span><span class="p">,</span> <span class="n">searchEndDe</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ragne_searchBgnDe</span><span class="p">,</span> <span class="n">range_searchEndDe</span><span class="p">):</span>
+    <span class="n">a</span><span class="p">(</span><span class="n">searchBgnDe</span><span class="p">,</span> <span class="n">searchEndDe</span><span class="p">,</span> <span class="n">searchItemCd</span><span class="p">)</span>
+
+<span class="n">df_1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows_1</span><span class="p">)</span>
+<span class="n">df_1</span> <span class="o">=</span> <span class="n">df_1</span><span class="p">[</span><span class="n">df_1</span><span class="o">.</span><span class="n">hsCode</span> <span class="o">!=</span> <span class="s">'-'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">({</span><span class="s">'expDlr'</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="s">'impDlr'</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="s">'balPayments'</span><span class="p">:</span><span class="nb">int</span><span class="p">})</span>
+<span class="n">df_1</span>
+
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>year</th>
+      <th>statKor</th>
+      <th>hsCode</th>
+      <th>expDlr</th>
+      <th>impDlr</th>
+      <th>balPayments</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2015.01</td>
+      <td>신차</td>
+      <td>8703217000</td>
+      <td>61809228</td>
+      <td>182497</td>
+      <td>61626731</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2015.01</td>
+      <td>중고차</td>
+      <td>8703218000</td>
+      <td>5355328</td>
+      <td>173670</td>
+      <td>5181658</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2015.01</td>
+      <td>신차</td>
+      <td>8703227000</td>
+      <td>587532292</td>
+      <td>2922784</td>
+      <td>584609508</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2015.01</td>
+      <td>중고차</td>
+      <td>8703228000</td>
+      <td>11313288</td>
+      <td>25165</td>
+      <td>11288123</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2015.01</td>
+      <td>신차</td>
+      <td>8703231010</td>
+      <td>1264670766</td>
+      <td>68908251</td>
+      <td>1195762515</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>876</th>
+      <td>2020.08</td>
+      <td>중고차</td>
+      <td>8703239020</td>
+      <td>7715610</td>
+      <td>1340566</td>
+      <td>6375044</td>
+    </tr>
+    <tr>
+      <th>877</th>
+      <td>2020.08</td>
+      <td>신차</td>
+      <td>8703241010</td>
+      <td>322423781</td>
+      <td>164538857</td>
+      <td>157884924</td>
+    </tr>
+    <tr>
+      <th>878</th>
+      <td>2020.08</td>
+      <td>중고차</td>
+      <td>8703241020</td>
+      <td>2429211</td>
+      <td>2284336</td>
+      <td>144875</td>
+    </tr>
+    <tr>
+      <th>879</th>
+      <td>2020.08</td>
+      <td>신차</td>
+      <td>8703249010</td>
+      <td>9784592</td>
+      <td>25698521</td>
+      <td>-15913929</td>
+    </tr>
+    <tr>
+      <th>880</th>
+      <td>2020.08</td>
+      <td>중고차</td>
+      <td>8703249020</td>
+      <td>839941</td>
+      <td>825064</td>
+      <td>14877</td>
+    </tr>
+  </tbody>
+</table>
+<p>876 rows × 6 columns</p>
+</div>
+
+<p>자동차는 수출입 코드가 생각보다 복잡하게 분류되어 조금더 조사 해볼 필요가 있다.</p>
+
+<p>앞으로는 수출입코드가 명확한 제품만 검색하는것을 추천한다.</p>
+
+<p>8703217000 # 실린더용량 1000cc 이하 신차</p>
+
+<p>8703227000 # 실린더용량 1000cc 초과 1500cc 이하 신차</p>
+
+<p>8703231010 # 실린더용량 1500cc 초과 3000cc 이하 신차 (1)</p>
+
+<p>8703239010 # 실린더용량 1500cc 초과 3000cc 이하 신차 (2)</p>
+
+<p>8703241010 # 실린더용량 3000cc 이하 신차 (1)</p>
+
+<p>8703249010 # 실린더용량 3000cc 이하 신차 (2)</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">graph_1</span> <span class="o">=</span> <span class="n">df_1</span><span class="p">[</span><span class="n">df_1</span><span class="o">.</span><span class="n">statKor</span> <span class="o">==</span> <span class="s">'신차'</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s">'year'</span><span class="p">)</span><span class="o">.</span><span class="nb">sum</span><span class="p">()</span> <span class="o">/</span> <span class="mi">100000000</span> <span class="o">*</span> <span class="mi">1200</span> <span class="c1">## 환율 1200원
+</span><span class="n">graph_1</span> <span class="o">=</span> <span class="n">graph_1</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s">"index"</span><span class="p">:</span> <span class="s">"year"</span><span class="p">})</span>
+<span class="n">graph_1</span><span class="p">[</span><span class="s">'year'</span><span class="p">]</span> <span class="o">=</span> <span class="n">graph_1</span><span class="p">[</span><span class="s">'year'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">'datetime64[ns]'</span><span class="p">)</span>
+<span class="n">graph_1</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>year</th>
+      <th>expDlr</th>
+      <th>impDlr</th>
+      <th>balPayments</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2015-01-01</td>
+      <td>36291.227304</td>
+      <td>3578.479920</td>
+      <td>32712.747384</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2015-02-01</td>
+      <td>30662.912976</td>
+      <td>3036.092328</td>
+      <td>27626.820648</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2015-03-01</td>
+      <td>40238.613240</td>
+      <td>3837.798108</td>
+      <td>36400.815132</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2015-04-01</td>
+      <td>41669.766696</td>
+      <td>3701.494332</td>
+      <td>37968.272364</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2015-05-01</td>
+      <td>35459.968632</td>
+      <td>3338.356740</td>
+      <td>32121.611892</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>63</th>
+      <td>2020-04-01</td>
+      <td>18595.547388</td>
+      <td>8334.615060</td>
+      <td>10260.932328</td>
+    </tr>
+    <tr>
+      <th>64</th>
+      <td>2020-05-01</td>
+      <td>13422.880368</td>
+      <td>6475.502460</td>
+      <td>6947.377908</td>
+    </tr>
+    <tr>
+      <th>65</th>
+      <td>2020-06-01</td>
+      <td>19109.585076</td>
+      <td>3484.373256</td>
+      <td>15625.211820</td>
+    </tr>
+    <tr>
+      <th>66</th>
+      <td>2020-07-01</td>
+      <td>30189.819960</td>
+      <td>3898.841928</td>
+      <td>26290.978032</td>
+    </tr>
+    <tr>
+      <th>67</th>
+      <td>2020-08-01</td>
+      <td>22308.415944</td>
+      <td>6023.856564</td>
+      <td>16284.559380</td>
+    </tr>
+  </tbody>
+</table>
+<p>68 rows × 4 columns</p>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">graph_1</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>year</th>
+      <th>expDlr</th>
+      <th>impDlr</th>
+      <th>balPayments</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>48</th>
+      <td>2019-01-01</td>
+      <td>61412.848800</td>
+      <td>10276.930104</td>
+      <td>51135.918696</td>
+    </tr>
+    <tr>
+      <th>49</th>
+      <td>2019-02-01</td>
+      <td>24317.098752</td>
+      <td>3885.256140</td>
+      <td>20431.842612</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>2019-03-01</td>
+      <td>31213.341936</td>
+      <td>6843.082488</td>
+      <td>24370.259448</td>
+    </tr>
+    <tr>
+      <th>51</th>
+      <td>2019-04-01</td>
+      <td>32553.757848</td>
+      <td>6236.807724</td>
+      <td>26316.950124</td>
+    </tr>
+    <tr>
+      <th>52</th>
+      <td>2019-05-01</td>
+      <td>35211.662040</td>
+      <td>5037.568716</td>
+      <td>30174.093324</td>
+    </tr>
+    <tr>
+      <th>53</th>
+      <td>2019-06-01</td>
+      <td>33084.521532</td>
+      <td>4960.167168</td>
+      <td>28124.354364</td>
+    </tr>
+    <tr>
+      <th>54</th>
+      <td>2019-07-01</td>
+      <td>32261.494284</td>
+      <td>8173.738800</td>
+      <td>24087.755484</td>
+    </tr>
+    <tr>
+      <th>55</th>
+      <td>2019-08-01</td>
+      <td>24654.308088</td>
+      <td>8379.387072</td>
+      <td>16274.921016</td>
+    </tr>
+    <tr>
+      <th>56</th>
+      <td>2019-09-01</td>
+      <td>24842.036520</td>
+      <td>7037.552940</td>
+      <td>17804.483580</td>
+    </tr>
+    <tr>
+      <th>57</th>
+      <td>2019-10-01</td>
+      <td>32846.579736</td>
+      <td>8814.210684</td>
+      <td>24032.369052</td>
+    </tr>
+    <tr>
+      <th>58</th>
+      <td>2019-11-01</td>
+      <td>33219.159708</td>
+      <td>4599.838584</td>
+      <td>28619.321124</td>
+    </tr>
+    <tr>
+      <th>59</th>
+      <td>2019-12-01</td>
+      <td>32593.551084</td>
+      <td>9838.477752</td>
+      <td>22755.073332</td>
+    </tr>
+    <tr>
+      <th>60</th>
+      <td>2020-01-01</td>
+      <td>48401.686944</td>
+      <td>8684.916360</td>
+      <td>39716.770584</td>
+    </tr>
+    <tr>
+      <th>61</th>
+      <td>2020-02-01</td>
+      <td>20547.620424</td>
+      <td>5702.707896</td>
+      <td>14844.912528</td>
+    </tr>
+    <tr>
+      <th>62</th>
+      <td>2020-03-01</td>
+      <td>33369.711720</td>
+      <td>7049.699208</td>
+      <td>26320.012512</td>
+    </tr>
+    <tr>
+      <th>63</th>
+      <td>2020-04-01</td>
+      <td>18595.547388</td>
+      <td>8334.615060</td>
+      <td>10260.932328</td>
+    </tr>
+    <tr>
+      <th>64</th>
+      <td>2020-05-01</td>
+      <td>13422.880368</td>
+      <td>6475.502460</td>
+      <td>6947.377908</td>
+    </tr>
+    <tr>
+      <th>65</th>
+      <td>2020-06-01</td>
+      <td>19109.585076</td>
+      <td>3484.373256</td>
+      <td>15625.211820</td>
+    </tr>
+    <tr>
+      <th>66</th>
+      <td>2020-07-01</td>
+      <td>30189.819960</td>
+      <td>3898.841928</td>
+      <td>26290.978032</td>
+    </tr>
+    <tr>
+      <th>67</th>
+      <td>2020-08-01</td>
+      <td>22308.415944</td>
+      <td>6023.856564</td>
+      <td>16284.559380</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>2) FinanceDataReader 데이터를 이용하여 주가 데이터 로드</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">FinanceDataReader</span> <span class="k">as</span> <span class="n">fdr</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">hmc</span> <span class="o">=</span> <span class="n">fdr</span><span class="o">.</span><span class="n">DataReader</span><span class="p">(</span><span class="n">company</span><span class="p">,</span> <span class="s">'2015-01-01'</span><span class="p">)</span> <span class="c1"># 다우지수
+</span><span class="n">hmc</span><span class="p">[</span><span class="s">'Close'</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+
+<span class="c1">#ax0.plot(df_u['Close'][start_date:], 'r-')
+</span></code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x14fd5d80108&gt;
+</code></pre></div></div>
+
+<p><img src="/public/img/2020-09-22-Pulbic_API_export_12_1.png" alt="png" /></p>
+
+<p>3) OpenDartReader를 이용해 매출액 불러오기</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">OpenDartReader</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dart_api_key</span><span class="o">=</span><span class="s">"######"</span>
+<span class="n">dart</span> <span class="o">=</span> <span class="n">OpenDartReader</span><span class="p">(</span><span class="n">dart_api_key</span><span class="p">)</span> 
+
+<span class="n">year</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2016</span><span class="p">,</span> <span class="mi">2021</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">dart_qt_revenue</span><span class="p">(</span><span class="n">year</span><span class="p">):</span>      <span class="c1"># 분기보고서 매출
+</span>    <span class="n">reprt_code</span> <span class="o">=</span> <span class="p">[</span><span class="mi">11013</span><span class="p">,</span> <span class="mi">11012</span><span class="p">,</span> <span class="mi">11014</span><span class="p">]</span>
+    <span class="n">year_reprt_code</span> <span class="o">=</span> <span class="p">[</span><span class="mi">11011</span><span class="p">]</span>
+    
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">year</span><span class="p">:</span>
+        <span class="n">sum_revenue</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">reprt_code</span><span class="p">:</span>
+            
+            <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="mi">2020</span> <span class="ow">and</span> <span class="n">b</span><span class="o">==</span> <span class="mi">11012</span><span class="p">:</span>              <span class="c1">#### 2020년 3분기까지만 나오게하는
+</span>                <span class="k">print</span><span class="p">(</span><span class="s">'aaaaaaa'</span><span class="p">)</span>
+                <span class="k">break</span>
+            
+            <span class="n">fs</span> <span class="o">=</span> <span class="n">dart</span><span class="o">.</span><span class="n">finstate</span><span class="p">(</span><span class="n">company</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+            <span class="n">fs_cfs</span> <span class="o">=</span> <span class="n">fs</span><span class="p">[</span><span class="n">fs</span><span class="p">[</span><span class="s">'fs_div'</span><span class="p">]</span><span class="o">.</span><span class="nb">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s">'CFS'</span><span class="p">)]</span>
+            <span class="n">fs_revenue</span><span class="o">=</span> <span class="n">fs_cfs</span><span class="p">[</span><span class="n">fs_cfs</span><span class="p">[</span><span class="s">'account_nm'</span><span class="p">]</span><span class="o">.</span><span class="nb">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s">'매출액'</span><span class="p">)]</span>
+            <span class="n">revenue</span> <span class="o">=</span> <span class="n">fs_revenue</span><span class="p">[</span><span class="s">'thstrm_amount'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">','</span><span class="p">,</span> <span class="s">''</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="c1"># 값 불러오기
+</span>            <span class="n">sum_revenue</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">revenue</span><span class="p">)</span>
+            <span class="n">df_revenue</span><span class="p">[</span><span class="n">fs_revenue</span><span class="p">[</span><span class="s">'thstrm_dt'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">13</span><span class="p">:]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">'.'</span><span class="p">,</span> <span class="s">''</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">revenue</span><span class="p">)</span><span class="o">/</span><span class="mi">100000000</span>
+        
+        <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="mi">2020</span> <span class="ow">and</span> <span class="n">b</span><span class="o">==</span> <span class="mi">11012</span><span class="p">:</span>                  <span class="c1">#### 2020년 3분기까지만 나오게하는
+</span>            <span class="k">print</span><span class="p">(</span><span class="s">'bbbbbbb'</span><span class="p">)</span>
+            <span class="k">break</span>
+            
+        <span class="n">fs</span> <span class="o">=</span> <span class="n">dart</span><span class="o">.</span><span class="n">finstate</span><span class="p">(</span><span class="n">company</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="mi">11011</span><span class="p">)</span>
+        <span class="n">fs_cfs</span> <span class="o">=</span> <span class="n">fs</span><span class="p">[</span><span class="n">fs</span><span class="p">[</span><span class="s">'fs_div'</span><span class="p">]</span><span class="o">.</span><span class="nb">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s">'CFS'</span><span class="p">)]</span>
+        <span class="n">fs_revenue</span><span class="o">=</span> <span class="n">fs_cfs</span><span class="p">[</span><span class="n">fs_cfs</span><span class="p">[</span><span class="s">'account_nm'</span><span class="p">]</span><span class="o">.</span><span class="nb">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s">'매출액'</span><span class="p">)]</span>
+        <span class="n">revenue</span> <span class="o">=</span> <span class="n">fs_revenue</span><span class="p">[</span><span class="s">'thstrm_amount'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">','</span><span class="p">,</span> <span class="s">''</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="c1"># 값 불러오기
+</span>        <span class="n">revenue</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">revenue</span><span class="p">)</span> <span class="o">-</span> <span class="n">sum_revenue</span>
+        <span class="n">df_revenue</span><span class="p">[</span><span class="n">fs_revenue</span><span class="p">[</span><span class="s">'thstrm_dt'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">13</span><span class="p">:]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">'.'</span><span class="p">,</span> <span class="s">''</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span> <span class="o">=</span> <span class="n">revenue</span><span class="o">/</span><span class="mi">100000000</span>
+
+    <span class="k">return</span> <span class="n">df_revenue</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_revenue</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">dart_qt_revenue</span><span class="p">(</span><span class="n">year</span><span class="p">)</span>
+
+<span class="n">df_21</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df_revenue</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+<span class="n">df_21</span> <span class="o">=</span> <span class="n">df_21</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">df_21</span><span class="o">.</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">'연도'</span><span class="p">,</span> <span class="s">'매출액'</span><span class="p">]</span>
+<span class="n">df_21</span><span class="p">[</span><span class="s">'연도'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_21</span><span class="p">[</span><span class="s">'연도'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">'datetime64[ns]'</span><span class="p">)</span>
+
+<span class="n">df_21</span>
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C:\Users\masun\anaconda3\lib\site-packages\OpenDartReader\dart_finstate.py:28: FutureWarning: pandas.io.json.json_normalize is deprecated, use pandas.json_normalize instead
+  return json_normalize(jo, 'list')
+
+
+aaaaaaa
+bbbbbbb
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>연도</th>
+      <th>매출액</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2016-03-31</td>
+      <td>223506.24</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2016-06-30</td>
+      <td>246767.26</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2016-09-30</td>
+      <td>220836.70</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2016-12-31</td>
+      <td>245380.04</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2017-03-31</td>
+      <td>233659.59</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2017-06-30</td>
+      <td>243080.02</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2017-09-30</td>
+      <td>242012.73</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2017-12-31</td>
+      <td>245008.45</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2018-03-31</td>
+      <td>224365.61</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>2018-06-30</td>
+      <td>247118.02</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>2018-09-30</td>
+      <td>244337.35</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>2018-12-31</td>
+      <td>252305.11</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>2019-03-31</td>
+      <td>239870.79</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>2019-06-30</td>
+      <td>269663.53</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>2019-09-30</td>
+      <td>269688.53</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>2019-12-31</td>
+      <td>278241.37</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>2020-03-31</td>
+      <td>253194.48</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<span class="n">ax0</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">(),</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
+
+<span class="c1">#fig, ax0 = plt.subplots()
+#ax1 = ax0.twinx()
+</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">graph_1</span><span class="p">[</span><span class="s">'year'</span><span class="p">],</span> <span class="n">graph_1</span><span class="p">[</span><span class="s">'expDlr'</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"수출 금액"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'dodgerblue'</span><span class="p">)</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_21</span><span class="p">[</span><span class="s">'연도'</span><span class="p">],</span> <span class="n">df_21</span><span class="p">[</span><span class="s">'매출액'</span><span class="p">]</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"분기 매출/3"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'red'</span><span class="p">)</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">"수출금액(억원)"</span><span class="p">)</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hmc</span><span class="p">[</span><span class="s">'Close'</span><span class="p">][</span><span class="n">graph_1</span><span class="p">[</span><span class="s">'year'</span><span class="p">]</span><span class="o">.</span><span class="nb">min</span><span class="p">():],</span> <span class="n">label</span> <span class="o">=</span><span class="s">'주식'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'black'</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">"주가"</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">ylim_max</span> <span class="o">=</span> <span class="n">hmc</span><span class="p">[</span><span class="s">'Close'</span><span class="p">][</span><span class="n">graph_1</span><span class="p">[</span><span class="s">'year'</span><span class="p">]</span><span class="o">.</span><span class="nb">min</span><span class="p">():</span><span class="n">graph_1</span><span class="p">[</span><span class="s">'year'</span><span class="p">]</span><span class="o">.</span><span class="nb">max</span><span class="p">()]</span><span class="o">.</span><span class="nb">max</span><span class="p">()</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">ylim_max</span><span class="o">*</span><span class="mf">1.3</span><span class="p">])</span>
+
+<span class="n">ax0</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/public/img/2020-09-22-Pulbic_API_export_18_0.png" alt="png" /></p>
+
+<p>그래프는 좀 이쁘게 꾸밀필요가 있다.
+개념만 파악하자</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div></div>
+
+	</div>
+</article>
+		</div>
+	</div>
+  </body>
+</html>
